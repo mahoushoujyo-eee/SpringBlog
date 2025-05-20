@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.eee.account.mapper.UserMapper">
+    <resultMap id="userPrincipalMap" type="org.eee.account.entity.UserPrincipal">
+        <result property="id" column="id"/>
+        <result property="username" column="use_name"/>
+        <result property="password" column="encrypted_password"/>
+    </resultMap>
+
+    <resultMap id="userMap" type="org.eee.model.entity.User">
+        <result property="id" column="id"/>
+        <result property="username" column="use_name"/>
+        <result property="email" column="email"/>
+        <result property="encryptedPassword" column="encrypted_password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="githubInfo" column="github_info"/>
+        <result property="googleInfo" column="google_info"/>
+    </resultMap>
+
+    <!-- 插入新用户 -->
+    <insert id="insertUser">
+        INSERT INTO user (username, email, encrypted_password, nickname, github_info, google_info)
+        VALUES (#{username}, #{email}, #{encryptedPassword}, #{nickname}, #{githubInfo}, #{googleInfo})
+    </insert>
+
+
+    <update id="updatePassword">
+
+    </update>
+
+    <select id="getUserByUsername" resultType="org.eee.account.entity.UserPrincipal">
+
+    </select>
+    <select id="getMaxUserName" resultType="java.lang.String">
+        SELECT MAX(username) FROM user
+    </select>
+</mapper>
