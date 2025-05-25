@@ -8,9 +8,12 @@ import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.ServiceResponse;
 
 @Service
 @Slf4j
+@LogArgumentsAndResponse
 public class UserService
 {
     @Autowired
@@ -22,7 +25,7 @@ public class UserService
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Response<Long> register(User user)
+    public ServiceResponse<Long> register(User user)
     {
         String username = userMapper.getMaxUserName();
         Long newUserName = Long.parseLong(username) + 1L;
@@ -33,6 +36,6 @@ public class UserService
         log.info("register user:{}", user);
         userMapper.insertUser(user);
 
-        return Response.success(newUserName, "注册成功！您的uid为"+newUserName);
+        return ServiceResponse.buildSuccessResponse(newUserName, "注册成功！您的uid为"+newUserName);
     }
 }

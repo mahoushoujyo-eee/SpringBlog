@@ -1,11 +1,15 @@
 package org.eee.model.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import stark.coderaider.fluentschema.commons.NamingConvention;
 import stark.coderaider.fluentschema.commons.annotations.Column;
 import stark.coderaider.fluentschema.commons.annotations.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
+@ToString(callSuper = true)
 @Table(name = "user", namingConvention = NamingConvention.LOWER_CASE_WITH_UNDERSCORE)
 public class User extends DomainBase
 {

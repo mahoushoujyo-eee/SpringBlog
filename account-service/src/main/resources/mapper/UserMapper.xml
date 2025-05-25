@@ -19,8 +19,8 @@
 
     <!-- 插入新用户 -->
     <insert id="insertUser">
-        INSERT INTO user (username, email, encrypted_password, nickname, github_info, google_info)
-        VALUES (#{username}, #{email}, #{encryptedPassword}, #{nickname}, #{githubInfo}, #{googleInfo})
+        INSERT INTO user (username, email, encrypted_password, nickname, github_info, google_info, creator_id)
+        VALUES (#{username}, #{email}, #{encryptedPassword}, #{nickname}, #{githubInfo}, #{googleInfo}, #{creatorId})
     </insert>
 
 

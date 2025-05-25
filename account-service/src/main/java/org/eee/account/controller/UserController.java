@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import stark.dataworks.boot.web.ServiceResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,9 +21,9 @@ public class UserController
     private UserService  userService;
 
     @PostMapping("/register")
-    public Response<Long> register(@RequestBody User user)
+    public ServiceResponse<Long> register(@RequestBody User user)
     {
-        log.info("register user:{}", user);
+        log.info("Registering user: {}", user);
         return userService.register(user);
     }
 
