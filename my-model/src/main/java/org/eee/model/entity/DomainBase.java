@@ -18,29 +18,27 @@ public abstract class DomainBase
      */
     @PrimaryKey
     @AutoIncrement
-    private long id;
+    public long id;
 
     /**
      * ID of the creator of the record.
      */
-    @Column(defaultValue = "1")
-    private long creatorId;
+    public long creatorId;
 
     /**
      * Creation time of the record.
      */
     @Column(defaultValue = "NOW()")
-    private Date creationTime;
+    public Date creationTime;
 
     /**
      * ID of the user who modifies the record.
      */
-    @Column(defaultValue = "1")
-    private long modifierId;
+    public long modifierId;
 
     /**
      * Last modification time of the record.
      */
     @Column(defaultValue = "NOW()", onUpdate = "NOW()")
-    private Date modificationTime;
+    public Date modificationTime;
 }

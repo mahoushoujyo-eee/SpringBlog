@@ -14,4 +14,6 @@ public interface UserMapper
     void insertUser(User user);
 
     String getMaxUserName();
+
+    UserPrincipal getUserByEmail(String email);
 }

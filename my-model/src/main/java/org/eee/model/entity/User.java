@@ -22,7 +22,7 @@ public class User extends DomainBase
     @Column(type = "VARCHAR(100)")
     private String encryptedPassword;
 
-    @Column(type = "INT")
+    @Column(type = "INT", defaultValue = "0")
     private Integer state;
 
     @Column(type = "VARCHAR(30)")

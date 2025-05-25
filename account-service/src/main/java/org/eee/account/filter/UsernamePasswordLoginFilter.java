@@ -33,15 +33,15 @@ public class UsernamePasswordLoginFilter extends UsernamePasswordAuthenticationF
         Map<String, String> credentials = objectMapper.readValue(request.getInputStream(), new TypeReference<Map<String, String>>() {
         });
 
-        String username = credentials.get("username");
+        String email = credentials.get("email");
         String password = credentials.get("password");
 
         // 3. 创建认证令牌
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
+                new UsernamePasswordAuthenticationToken(email, password);
 
         // 4. 记录日志（使用 Lombok 的 log）
-        log.info("接收到登录请求: username={}, password={}", username, password);
+        log.info("接收到登录请求: email={}, password={}", email, password);
 
         // 5. 调用父类方法继续认证流程
         return this.getAuthenticationManager().authenticate(authenticationToken);

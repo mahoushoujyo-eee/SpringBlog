@@ -1,25 +1,45 @@
 package org.eee.account.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eee.account.entity.UserPrincipal;
+import org.eee.account.mapper.RoleMapper;
 import org.eee.account.mapper.UserMapper;
+import org.eee.model.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
+@Slf4j
 public class UserPrincipalService implements UserDetailsService, UserDetailsPasswordService
 {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RoleMapper roleMapper;
+
     @Override
-    public UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String email)
     {
-        UserDetails user = userMapper.getUserByUsername(username);
+        UserPrincipal user = userMapper.getUserByEmail(email);
         if(user == null)
             throw new UsernameNotFoundException("用户名不存在");
 
+        List<Role> roles  =  roleMapper.getRoleByUserId(user.getId());
+        log.info("load user roles {}", roles);
+        List<GrantedAuthority> authorities = roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+                .collect(Collectors.toList());
+        user.setAuthorities(authorities);
+
+        log.info("load user {}", user);
         return user;
     }
 
@@ -27,11 +47,9 @@ public class UserPrincipalService implements UserDetailsService, UserDetailsPass
     public UserDetails updatePassword(UserDetails user, String newPassword) {
         userMapper.updatePassword(user.getUsername(), newPassword);
 
-        UserPrincipal newUser = new UserPrincipal();
-
-        newUser.setUsername(user.getUsername());
+        UserPrincipal newUser = (UserPrincipal) user;
         newUser.setPassword(newPassword);
-
+        
         return newUser;
     }
 }

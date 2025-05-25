@@ -6,13 +6,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.eee.account.entity.UserPrincipal;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class JwtUtil {
@@ -39,6 +40,9 @@ public class JwtUtil {
         Map<String, Object> payload = new HashMap<>();
         payload.put("userId", user.getId());
         payload.put("username", user.getUsername());
+        payload.put("authorities", user.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toList()));
         payload.put("exp", new Date(System.currentTimeMillis() + EXPIRE)); // 过期时间
         payload.put("iat", new Date()); // 签发时间
         payload.put("iss", "eee"); // 签发者
@@ -78,8 +82,13 @@ public class JwtUtil {
                     .getBody();
 
             UserPrincipal user = new UserPrincipal();
-            user.setId((Long) claims.get("userId"));
+            user.setId(((Number) claims.get("userId")).longValue());
             user.setUsername((String) claims.get("username"));
+            log.info("claim auth: {}", claims.get("authorities"));
+            List<String> authorityList = (List<String>) claims.get("authorities");
+            List<GrantedAuthority> authorities = authorityList.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+            user.setAuthorities(authorities);
 
             return user;
        }
