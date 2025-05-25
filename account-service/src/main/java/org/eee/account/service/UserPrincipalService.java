@@ -45,11 +45,10 @@ public class UserPrincipalService implements UserDetailsService, UserDetailsPass
 
     @Override
     public UserDetails updatePassword(UserDetails user, String newPassword) {
-        userMapper.updatePassword(user.getUsername(), newPassword);
+        UserPrincipal userPrincipal = (UserPrincipal) user;
+        userMapper.updatePasswordByEmail(userPrincipal.getUsername(), newPassword);
 
-        UserPrincipal newUser = (UserPrincipal) user;
-        newUser.setPassword(newPassword);
-        
-        return newUser;
+        userPrincipal.setPassword(newPassword);
+        return user;
     }
 }

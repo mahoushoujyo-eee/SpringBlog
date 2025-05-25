@@ -22,7 +22,7 @@ public class Response<T>
     {
         Response<T> response = new Response<>();
         response.setCode(200);
-        response.setMessage("success");
+        response.setMessage(message);
         response.setData(data);
         return response;
     }

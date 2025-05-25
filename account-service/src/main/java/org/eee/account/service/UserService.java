@@ -2,9 +2,12 @@ package org.eee.account.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eee.account.constant.RoleConstant;
+import org.eee.account.entity.UserPrincipal;
 import org.eee.account.mapper.RoleMapper;
 import org.eee.account.mapper.UserMapper;
 import org.eee.account.param.Response;
+import org.eee.account.param.UserRegisterParam;
+import org.eee.account.param.UserResetParam;
 import org.eee.model.entity.Role;
 import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +31,62 @@ public class UserService
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private UserPrincipalService userPrincipalService;
+
     @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<Long> register(User user)
+    public Response<Long> register(UserRegisterParam userParam)
     {
+        if(userMapper.ifEmailExists(userParam.getEmail()))
+            return Response.error(300, "邮箱已存在！");
+
+        if(!mailService.validateMail(userParam.getEmail(), userParam.getEmailCode()))
+            return Response.error(300, "邮箱验证码错误！");
+
+        User user = new User();
         String username = userMapper.getMaxUserName();
         Long newUserName = Long.parseLong(username) + 1L;
         user.setUsername(String.valueOf(newUserName));
-        user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
+        user.setEmail(userParam.getEmail());
+        user.setNickname(userParam.getNickname());
+        user.setGithubInfo(userParam.getGithubInfo());
+        user.setGoogleInfo(userParam.getGoogleInfo());
+        user.setEncryptedPassword(passwordEncoder.encode(userParam.getPassword()));
         log.info("register user:{}", user);
         userMapper.insertUser(user);
 
+        if(userParam.getInviteCode() != null && !userParam.getInviteCode().isEmpty())
+        {
+            roleMapper.registerRole(new Role("ROLE_ADMIN", user.getId(), RoleConstant.ROLE_ADMIN));
+        }
+
         roleMapper.registerRole(new Role("ROLE_USER", user.getId(), RoleConstant.ROLE_USER));
-        return ServiceResponse.buildSuccessResponse(newUserName, "注册成功！您的uid为"+newUserName);
+        return Response.success(newUserName, "注册成功！您的uid为"+newUserName);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Response<String> resetPassword(UserResetParam userParam)
+    {
+        if(!userMapper.ifEmailExists(userParam.getEmail()))
+            return Response.error(300, "邮箱不存在！");
+
+        if(!mailService.validateMail(userParam.getEmail(), userParam.getEmailCode()))
+            return Response.error(300, "邮箱验证码错误！");
+
+        UserPrincipal userPrincipal = new UserPrincipal();
+        userPrincipal.setUsername(userParam.getEmail());
+        userPrincipal.setPassword(userParam.getNewPassword());
+
+        userPrincipalService.updatePassword(userPrincipal, userParam.getNewPassword());
+
+        return Response.success("重置密码成功！");
+    }
+
+    public Response<String> oauthRegister(User user) {
+
+        return Response.success("注册成功！");
     }
 }

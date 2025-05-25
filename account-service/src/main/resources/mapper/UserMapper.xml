@@ -28,6 +28,10 @@
         UPDATE user SET encrypted_password = #{newPassword} WHERE username = #{username}
     </update>
 
+    <update id="updatePasswordByEmail">
+        UPDATE user SET encrypted_password = #{newPassword} WHERE email = #{email}
+    </update>
+
     <select id="getUserByUsername" resultMap="userPrincipalMap">
         SELECT * FROM user WHERE username = #{username}
     </select>
@@ -38,5 +42,8 @@
 
     <select id="getUserByEmail" resultMap="userPrincipalMap">
         SELECT * FROM user WHERE email = #{email}
+    </select>
+    <select id="ifEmailExists" resultType="java.lang.Boolean">
+        SELECT COUNT(*) > 0 FROM user WHERE email = #{email}
     </select>
 </mapper>

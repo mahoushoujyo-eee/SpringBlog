@@ -11,13 +11,20 @@ spring:
     password: yuzaoqian123
   mail:
     host: smtp.qq.com
-    port: 587
+    port: 465
     username: wmrwkantskddhdmz@qq.com
     password: sqqdtqljorgrfbje
-    protocol: smtp
+    protocol: smtps
     smtp:
       auth: true
+      ssl:
+        enable: true
+        trust: smtp.qq.com
       starttls:
         enable: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 mybatis:
   mapper-locations: classpath:mapper/*.xml

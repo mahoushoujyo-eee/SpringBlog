@@ -11,9 +11,13 @@ public interface UserMapper
 
     void updatePassword(String username, String newPassword);
 
+    void updatePasswordByEmail(String email, String newPassword);
+
     void insertUser(User user);
 
     String getMaxUserName();
 
     UserPrincipal getUserByEmail(String email);
+
+    boolean ifEmailExists(String email);
 }
