@@ -6,9 +6,11 @@ import org.eee.account.mapper.RoleMapper;
 import org.eee.account.mapper.UserMapper;
 import org.eee.model.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,10 @@ public class UserPrincipalService implements UserDetailsService, UserDetailsPass
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email)
@@ -46,6 +52,7 @@ public class UserPrincipalService implements UserDetailsService, UserDetailsPass
     @Override
     public UserDetails updatePassword(UserDetails user, String newPassword) {
         UserPrincipal userPrincipal = (UserPrincipal) user;
+        userPrincipal.setPassword(passwordEncoder.encode(newPassword));
         userMapper.updatePasswordByEmail(userPrincipal.getUsername(), newPassword);
 
         userPrincipal.setPassword(newPassword);

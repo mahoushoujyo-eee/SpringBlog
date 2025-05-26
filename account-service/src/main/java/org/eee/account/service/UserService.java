@@ -6,16 +6,21 @@ import org.eee.account.entity.UserPrincipal;
 import org.eee.account.mapper.RoleMapper;
 import org.eee.account.mapper.UserMapper;
 import org.eee.account.param.Response;
+import org.eee.account.param.UserInfoParam;
 import org.eee.account.param.UserRegisterParam;
 import org.eee.account.param.UserResetParam;
 import org.eee.model.entity.Role;
 import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
 import stark.dataworks.boot.web.ServiceResponse;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -88,5 +93,24 @@ public class UserService
     public Response<String> oauthRegister(User user) {
 
         return Response.success("注册成功！");
+    }
+
+
+    public Response<UserInfoParam> loadUserById(UserPrincipal userPrincipal)
+    {
+        User user = userMapper.getUserByUserId(userPrincipal.getId());
+        UserInfoParam userInfoParam = new UserInfoParam();
+        userInfoParam.setId(user.getId());
+        userInfoParam.setUsername(user.getUsername());
+        userInfoParam.setName(user.getNickname());
+        userInfoParam.setEmail(user.getEmail());
+        List<String> authorities = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        userInfoParam.setAuthorities(authorities);
+
+        if(user != null)
+            return Response.success(userInfoParam);
+        return Response.error(300, "用户不存在！");
     }
 }

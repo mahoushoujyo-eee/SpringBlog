@@ -2,6 +2,24 @@ server:
   port: 58080
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23ligc4WFWPkukZwfD     # 替换为你的 Client ID
+            client-secret: 4ee1c15d5a0da3e58b6de44240287667077f97e3   # 替换为你的 Client Secret
+            scope:
+              - user
+            redirect-uri: http://localhost:58080/login/oauth2/code/github
+            client-name: GitHub
+            provider: github
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
   application:
     name: account-service
   datasource:

@@ -46,4 +46,7 @@
     <select id="ifEmailExists" resultType="java.lang.Boolean">
         SELECT COUNT(*) > 0 FROM user WHERE email = #{email}
     </select>
+    <select id="getUserByUserId" resultType="org.eee.model.entity.User">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
 </mapper>

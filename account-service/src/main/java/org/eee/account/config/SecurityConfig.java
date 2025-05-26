@@ -3,9 +3,7 @@ package org.eee.account.config;
 import lombok.extern.slf4j.Slf4j;
 import org.eee.account.filter.TokenFilter;
 import org.eee.account.filter.UsernamePasswordLoginFilter;
-import org.eee.account.handler.LoginFailureHandler;
-import org.eee.account.handler.LoginSuccessHandler;
-import org.eee.account.handler.LogoutSuccessHandler;
+import org.eee.account.handler.*;
 import org.eee.account.service.UserPrincipalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +37,12 @@ public class SecurityConfig {
     private LoginFailureHandler loginFailureHandler;
 
     @Autowired
+    private OauthSuccessHandler oauthSuccessHandler;
+
+    @Autowired
+    private OauthFailureHandler oauthFailureHandler;
+
+    @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
@@ -65,6 +69,14 @@ public class SecurityConfig {
                             auth.anyRequest().permitAll();
                         }
                 )
+//                .oauth2Login(oauth2 ->
+//                        {
+//                            oauth2.loginPage("/auth/oauth/login")
+//                                    .successHandler(oauthSuccessHandler)
+//                                    .failureHandler(oauthFailureHandler)
+//                                    .userInfoEndpoint(userInfo -> {});
+//                        }
+//                )
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 

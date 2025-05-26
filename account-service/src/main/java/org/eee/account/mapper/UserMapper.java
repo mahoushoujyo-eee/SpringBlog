@@ -20,4 +20,6 @@ public interface UserMapper
     UserPrincipal getUserByEmail(String email);
 
     boolean ifEmailExists(String email);
+
+    User getUserByUserId(Long userId);
 }
