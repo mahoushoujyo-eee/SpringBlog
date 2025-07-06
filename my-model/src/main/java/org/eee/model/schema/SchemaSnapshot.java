@@ -31,14 +31,38 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
             builder.primaryKey().columnName("id");
             builder.engine("InnoDB");
         });
-        schemaBuilder.table("like", builder -> {
-            builder.column().name("blog_id").type("BIGINT").nullable(true).unique(false);
+        schemaBuilder.table("conversation", builder -> {
+            builder.column().name("conversation_id").type("VARCHAR(255)").nullable(true).unique(false);
+            builder.column().name("user_id").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("title").type("VARCHAR(255)").nullable(true).unique(false);
             builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
             builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
             builder.column().name("modifier_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("modification_time").type("DATETIME").nullable(true).unique(false)
                     .defaultValue("NOW()").onUpdate("NOW()");
+            builder.primaryKey().columnName("id");
+            builder.engine("InnoDB");
+        });
+        schemaBuilder.table("like", builder -> {
+            builder.column().name("blog_id").type("BIGINT").nullable(true).unique(false);
+            builder.column().name("user_id").type("BIGINT").nullable(true).unique(false);
+            builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
+            builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
+            builder.column().name("modifier_id").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("modification_time").type("DATETIME").nullable(true).unique(false)
+                    .defaultValue("NOW()").onUpdate("NOW()");
+            builder.primaryKey().columnName("id");
+            builder.engine("InnoDB");
+        });
+        schemaBuilder.table("model", builder -> {
+            builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
+            builder.column().name("name").type("VARCHAR(250)").nullable(true).unique(false);
+            builder.column().name("description").type("VARCHAR(250)").nullable(true).unique(false);
+            builder.column().name("level").type("INT").nullable(false).unique(false);
+            builder.column().name("api_key").type("VARCHAR(500)").nullable(true).unique(false);
+            builder.column().name("base_url").type("VARCHAR(100)").nullable(true).unique(false);
             builder.primaryKey().columnName("id");
             builder.engine("InnoDB");
         });

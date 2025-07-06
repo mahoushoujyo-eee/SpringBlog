@@ -5,7 +5,6 @@ import org.eee.account.entity.UserPrincipal;
 import org.eee.account.param.Response;
 import org.eee.account.param.UserInfoParam;
 import org.eee.account.service.UserService;
-import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

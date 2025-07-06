@@ -68,15 +68,10 @@ public class SecurityConfig {
                             auth.requestMatchers("/user/**").hasRole("USER");
                             auth.anyRequest().permitAll();
                         }
-                )
-//                .oauth2Login(oauth2 ->
-//                        {
-//                            oauth2.loginPage("/auth/oauth/login")
-//                                    .successHandler(oauthSuccessHandler)
-//                                    .failureHandler(oauthFailureHandler)
-//                                    .userInfoEndpoint(userInfo -> {});
-//                        }
-//                )
+                ).oauth2Login(oauth2 -> oauth2
+                        .successHandler(oauthSuccessHandler)
+                        .failureHandler(oauthFailureHandler)
+                 )
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 

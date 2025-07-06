@@ -2,6 +2,22 @@ server:
   port: 58080
 
 spring:
+#  cloud:
+#    nacos:
+#      server-addr: 127.0.0.1:13848
+#    dubbo:
+#      registry:
+#        address: nacos://${spring.cloud.nacos.server-addr:127.0.0.1}:13848
+#        # This will enable application-level service discovery only (the recommended service discovery method for Dubbo3).
+#        # For users upgrading from Dubbo2.x, please set the value to 'all' for smooth migration.
+#        register-mode: instance
+#      protocol:
+#        name: tri
+#        port: 50051
+#      application:
+#        name: QuickStartApplication
+#        logger: slf4j
+
   security:
     oauth2:
       client:
@@ -9,11 +25,10 @@ spring:
           github:
             client-id: Ov23ligc4WFWPkukZwfD     # 替换为你的 Client ID
             client-secret: 4ee1c15d5a0da3e58b6de44240287667077f97e3   # 替换为你的 Client Secret
+            redirect-uri: http://127.0.0.1:58080/login/oauth2/code/github
             scope:
-              - user
-            redirect-uri: http://localhost:58080/login/oauth2/code/github
-            client-name: GitHub
-            provider: github
+              - read:user
+              - user:email
         provider:
           github:
             authorization-uri: https://github.com/login/oauth/authorize
