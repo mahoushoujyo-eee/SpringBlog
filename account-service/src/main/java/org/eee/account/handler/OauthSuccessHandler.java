@@ -4,9 +4,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.eee.account.entity.UserPrincipal;
+import org.eee.account.service.OauthService;
+import org.eee.account.service.UserPrincipalService;
+import org.eee.account.service.UserService;
 import org.eee.account.util.JwtUtil;
+import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -14,12 +22,24 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
 public class OauthSuccessHandler implements AuthenticationSuccessHandler
 {
+
+    @Autowired
+    private OauthService oauthService;
+
+    @Autowired
+    private UserPrincipalService userPrincipalService;
+
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
@@ -28,28 +48,35 @@ public class OauthSuccessHandler implements AuthenticationSuccessHandler
             throws IOException
     {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        log.info("Success Handler");
-        log.info("Principal: {}", authentication.getPrincipal());
         log.info("OAuth2User: {}", oAuth2User);
 
-        // 构建 JWT 的 payload
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", oAuth2User.getAttribute("id").toString());
-        claims.put("username", oAuth2User.getAttribute("login"));
-        claims.put("email", oAuth2User.getAttribute("email"));
-//        claims.put("iat", new Date());
+        User user = oauthService.getGithubUser(oAuth2User.getAttribute("id").toString());
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        UserPrincipal userPrincipal;
+        if(user == null)
+        {
+            userPrincipal = (UserPrincipal)userPrincipalService.loadUserByUsername(oAuth2User.getAttribute("email"));
+            if(userPrincipal == null)
+            {
+                User newUser = new User();
+                newUser.setEmail(oAuth2User.getAttribute("email"));
+                newUser.setNickname(oAuth2User.getAttribute("login"));
+                newUser.setGithubInfo(oAuth2User.getAttribute("id").toString());
+                newUser.setEncryptedPassword(passwordEncoder.encode("yuzaoqian123"));
+                oauthService.insertNewGithubUser(newUser);
+            }
+            else
+            {
+                oauthService.modifyGithubUser(oAuth2User.getAttribute("email"), oAuth2User.getAttribute("id").toString());
+            }
+        }
 
+        userPrincipal = (UserPrincipal)userPrincipalService.loadUserByUsername(oAuth2User.getAttribute("email"));
+
+        log.info("UserPrincipal: {}", userPrincipal);
         String token = JwtUtil.generateToken(userPrincipal);
 
-        // 返回 JSON 格式的登录结果
-//        response.setContentType("application/json;charset=UTF-8");
-//        response.getWriter().write("{\"token\": \"" + token + "\"}");
-//        response.setStatus(HttpServletResponse.SC_OK);
-
-        // 重定向到前端页面，并带上 Token 参数
-        String redirectUrl = "/?token=" + token;
+        String redirectUrl = "http://localhost:3000/oauth2?token=" + token;
         response.sendRedirect(redirectUrl);
     }
 }

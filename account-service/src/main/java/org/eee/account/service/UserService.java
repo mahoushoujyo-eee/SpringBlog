@@ -89,12 +89,6 @@ public class UserService
         return Response.success("重置密码成功！");
     }
 
-    public Response<String> oauthRegister(User user) {
-
-        return Response.success("注册成功！");
-    }
-
-
     public Response<UserInfoParam> loadUserById(UserPrincipal userPrincipal)
     {
         User user = userMapper.getUserByUserId(userPrincipal.getId());

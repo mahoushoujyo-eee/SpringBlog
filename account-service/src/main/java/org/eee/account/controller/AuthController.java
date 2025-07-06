@@ -32,11 +32,4 @@ public class AuthController
         return userService.resetPassword(user);
     }
 
-    @PostMapping("/oauth/register")
-    public Response<String> oauthRegister(@RequestBody User user)
-    {
-        log.info("Registering user: {}", user);
-        return userService.oauthRegister(user);
-    }
-
 }

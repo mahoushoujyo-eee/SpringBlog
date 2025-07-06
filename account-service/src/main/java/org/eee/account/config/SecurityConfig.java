@@ -5,18 +5,21 @@ import org.eee.account.filter.TokenFilter;
 import org.eee.account.filter.UsernamePasswordLoginFilter;
 import org.eee.account.handler.*;
 import org.eee.account.service.UserPrincipalService;
+import org.eee.account.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.HashMap;
@@ -24,7 +27,6 @@ import java.util.Map;
 
 @Slf4j
 @Configuration
-//@EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -48,6 +50,9 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
     public UsernamePasswordLoginFilter getUsernamePasswordLoginFilter() throws Exception {
         UsernamePasswordLoginFilter usernamePasswordLoginFilter = new UsernamePasswordLoginFilter();
         usernamePasswordLoginFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
@@ -69,6 +74,9 @@ public class SecurityConfig {
                             auth.anyRequest().permitAll();
                         }
                 ).oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
                         .successHandler(oauthSuccessHandler)
                         .failureHandler(oauthFailureHandler)
                  )

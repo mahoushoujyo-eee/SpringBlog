@@ -46,8 +46,8 @@ public class OauthFailureHandler implements AuthenticationFailureHandler
         // 打印异常信息
         log.error("认证异常: {}", exception.getMessage(), exception);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"code\":401,\"message\":\"OAuth2登录失败!\"}");
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(ErrorPage);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
@@ -67,4 +67,108 @@ public class OauthFailureHandler implements AuthenticationFailureHandler
 
         return request.getRemoteAddr();
     }
+
+    final String ErrorPage =
+            """
+                    <!DOCTYPE html>
+                    <html lang="zh-CN">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>访问超时</title>
+                        <style>
+                            * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                            }
+                    
+                            body {
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                min-height: 100vh;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #333;
+                            }
+                    
+                            .container {
+                                background: white;
+                                padding: 3rem 2rem;
+                                border-radius: 12px;
+                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                                text-align: center;
+                                max-width: 400px;
+                                width: 90%;
+                            }
+                    
+                            .icon {
+                                font-size: 4rem;
+                                color: #ff6b6b;
+                                margin-bottom: 1rem;
+                            }
+                    
+                            h1 {
+                                font-size: 1.8rem;
+                                margin-bottom: 1rem;
+                                color: #2c3e50;
+                            }
+                    
+                            p {
+                                color: #7f8c8d;
+                                margin-bottom: 2rem;
+                                line-height: 1.6;
+                            }
+                    
+                            .btn {
+                                background: #667eea;
+                                color: white;
+                                padding: 12px 24px;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 1rem;
+                                cursor: pointer;
+                                transition: background 0.3s ease;
+                                text-decoration: none;
+                                display: inline-block;
+                            }
+                    
+                            .btn:hover {
+                                background: #5a6fd8;
+                            }
+                    
+                            .countdown {
+                                margin-top: 1rem;
+                                font-size: 0.9rem;
+                                color: #95a5a6;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="icon">⏰</div>
+                            <h1>访问超时</h1>
+                            <p>抱歉，您的请求处理时间过长，连接已超时。请稍后重试或检查网络连接。</p>
+                            <a href="javascript:history.back()" class="btn">返回上页</a>
+                            <a href="/" class="btn" style="margin-left: 10px;">回到首页</a>
+                            <div class="countdown" id="countdown">页面将在 <span id="timer">10</span> 秒后自动刷新</div>
+                        </div>
+                    
+                        <script>
+                            let timeLeft = 10;
+                            const timer = document.getElementById('timer');
+                    
+                            const countdown = setInterval(() => {
+                                timeLeft--;
+                                timer.textContent = timeLeft;
+                    
+                                if (timeLeft <= 0) {
+                                    clearInterval(countdown);
+                                    location.reload();
+                                }
+                            }, 1000);
+                        </script>
+                    </body>
+                    </html>
+            """;
 }
