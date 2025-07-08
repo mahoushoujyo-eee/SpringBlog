@@ -6,24 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.eee.account.entity.UserPrincipal;
 import org.eee.account.service.OauthService;
 import org.eee.account.service.UserPrincipalService;
-import org.eee.account.service.UserService;
 import org.eee.account.util.JwtUtil;
 import org.eee.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component

@@ -9,7 +9,7 @@ import stark.coderaider.fluentschema.commons.annotations.Table;
 
 @Table(namingConvention = NamingConvention.LOWER_CASE_WITH_UNDERSCORE)
 @Data
-public class Blog extends DomainBase
+public class Resource extends DomainBase
 {
     @Column(type="VARCHAR(100)")
     private String nameInOss;

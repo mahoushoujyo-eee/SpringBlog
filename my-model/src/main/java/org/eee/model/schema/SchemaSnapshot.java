@@ -9,6 +9,8 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
         schemaBuilder.table("blog", builder -> {
             builder.column().name("name_in_oss").type("VARCHAR(100)").nullable(true).unique(false);
             builder.column().name("title").type("VARCHAR(50)").nullable(true).unique(false);
+            builder.column().name("type").type("INT").nullable(false).unique(false);
+            builder.column().name("size").type("BIGINT").nullable(false).unique(false);
             builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
             builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
@@ -63,6 +65,20 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
             builder.column().name("level").type("INT").nullable(false).unique(false);
             builder.column().name("api_key").type("VARCHAR(500)").nullable(true).unique(false);
             builder.column().name("base_url").type("VARCHAR(100)").nullable(true).unique(false);
+            builder.primaryKey().columnName("id");
+            builder.engine("InnoDB");
+        });
+        schemaBuilder.table("resource", builder -> {
+            builder.column().name("name_in_oss").type("VARCHAR(100)").nullable(true).unique(false);
+            builder.column().name("title").type("VARCHAR(50)").nullable(true).unique(false);
+            builder.column().name("type").type("INT").nullable(false).unique(false);
+            builder.column().name("size").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
+            builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
+            builder.column().name("modifier_id").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("modification_time").type("DATETIME").nullable(true).unique(false)
+                    .defaultValue("NOW()").onUpdate("NOW()");
             builder.primaryKey().columnName("id");
             builder.engine("InnoDB");
         });

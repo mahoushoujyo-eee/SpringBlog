@@ -2,22 +2,6 @@ server:
   port: 58080
 
 spring:
-#  cloud:
-#    nacos:
-#      server-addr: 127.0.0.1:13848
-#    dubbo:
-#      registry:
-#        address: nacos://${spring.cloud.nacos.server-addr:127.0.0.1}:13848
-#        # This will enable application-level service discovery only (the recommended service discovery method for Dubbo3).
-#        # For users upgrading from Dubbo2.x, please set the value to 'all' for smooth migration.
-#        register-mode: instance
-#      protocol:
-#        name: tri
-#        port: 50051
-#      application:
-#        name: QuickStartApplication
-#        logger: slf4j
-
   security:
     oauth2:
       client:
@@ -42,6 +26,8 @@ spring:
     url: jdbc:mysql://122.51.67.113:3306/spring_blog
     username: spring_blog
     password: yuzaoqian123
+    hikari:
+      max-lifetime: 1800000
   mail:
     host: smtp.qq.com
     port: 465
