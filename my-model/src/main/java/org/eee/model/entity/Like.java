@@ -11,7 +11,4 @@ public class Like extends DomainBase
 {
     @Column(type = "BIGINT")
     private Long blogId;
-
-    @Column(type = "BIGINT")
-    private Long userId;
 }

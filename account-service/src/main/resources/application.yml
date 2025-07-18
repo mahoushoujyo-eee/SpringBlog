@@ -24,9 +24,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://122.51.67.113:3306/spring_blog
-    username: spring_blog
-    password: yuzaoqian123
     hikari:
+      username: spring_blog
+      password: yuzaoqian123
       max-lifetime: 1800000         # 最大存活时间：30分钟
       idle-timeout: 600000          # 空闲连接超时时间：10分钟
       minimum-idle: 5               # 最小空闲连接数

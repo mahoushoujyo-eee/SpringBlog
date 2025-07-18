@@ -11,7 +11,7 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
             builder.column().name("title").type("VARCHAR(50)").nullable(true).unique(false);
             builder.column().name("img_url").type("VARCHAR(300)").nullable(true).unique(false);
             builder.column().name("type").type("INT").nullable(false).unique(false);
-            builder.column().name("size").type("BIGINT").nullable(false).unique(false);
+            builder.column().name("tags").type("VARCHAR(500)").nullable(true).unique(false);
             builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
             builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
@@ -24,7 +24,7 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
         schemaBuilder.table("comment", builder -> {
             builder.column().name("blog_id").type("BIGINT").nullable(true).unique(false);
             builder.column().name("content").type("VARCHAR(250)").nullable(true).unique(false);
-            builder.column().name("state").type("INT").nullable(true).unique(false);
+            builder.column().name("type").type("INT").nullable(true).unique(false).defaultValue("0");
             builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
             builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");
@@ -62,7 +62,6 @@ public class SchemaSnapshot extends SchemaSnapshotBase {
         });
         schemaBuilder.table("like", builder -> {
             builder.column().name("blog_id").type("BIGINT").nullable(true).unique(false);
-            builder.column().name("user_id").type("BIGINT").nullable(true).unique(false);
             builder.column().name("id").type("BIGINT").nullable(false).unique(false).autoIncrement(1);
             builder.column().name("creator_id").type("BIGINT").nullable(false).unique(false);
             builder.column().name("creation_time").type("DATETIME").nullable(true).unique(false).defaultValue("NOW()");

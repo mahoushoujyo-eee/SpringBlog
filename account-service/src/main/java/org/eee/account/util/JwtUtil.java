@@ -22,7 +22,7 @@ public class JwtUtil {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("sk-84a8a0716afe4b379998dbab676be3e5sk-84a8a0716afe4b379998dbab676be3e5".getBytes(StandardCharsets.UTF_8));
 
     // 过期时间（示例：2小时）
-    private static final long EXPIRE = TimeUnit.HOURS.toMillis(2);
+    private static final long EXPIRE = TimeUnit.HOURS.toMillis(24);
 
     /**
      * 生成JWT Token

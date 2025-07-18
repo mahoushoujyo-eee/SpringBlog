@@ -21,6 +21,6 @@ public class Blog extends DomainBase
     @Column(type="INT")
     private int type;
 
-    @Column(type="BIGINT")
-    private long size;
+    @Column(type="VARCHAR(500)")
+    private String tags;
 }

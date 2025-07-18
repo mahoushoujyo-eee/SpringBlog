@@ -22,12 +22,15 @@ public class TokenFilter extends OncePerRequestFilter
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty())
         {
-//            response.setContentType("application/json;charset=utf-8");
+            log.info("token为空");
+            response.setContentType("application/json;charset=utf-8");
 //            response.getWriter().write("{\"msg\":\"token为空\"}");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            return;
         }
-        if (JwtUtil.validateToken(token))
+         else if (JwtUtil.validateToken(token))
         {
+            log.info("token有效,{}", token);
             UserPrincipal user = JwtUtil.parseToken(token);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -35,12 +38,12 @@ public class TokenFilter extends OncePerRequestFilter
         }
         else
         {
-//            response.setContentType("application/json;charset=utf-8");
-//            response.getWriter().write("{\"msg\":\"token无效\"}");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("token无效,{}", token);
+            response.setContentType("application/json;charset=utf-8");
+            response.getWriter().write("{\"msg\":\"token无效\"}");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
         filterChain.doFilter(request, response);
-
-
     }
 }

@@ -69,7 +69,7 @@ public class OauthSuccessHandler implements AuthenticationSuccessHandler
         log.info("UserPrincipal: {}", userPrincipal);
         String token = JwtUtil.generateToken(userPrincipal);
 
-        String redirectUrl = "http://localhost:3000/oauth2?token=" + token;
+        String redirectUrl = "http://localhost:5000/oauth2?token=" + token;
         response.sendRedirect(redirectUrl);
     }
 }

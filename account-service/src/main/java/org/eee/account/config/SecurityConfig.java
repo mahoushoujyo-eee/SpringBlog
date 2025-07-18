@@ -53,7 +53,8 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
 
-    public UsernamePasswordLoginFilter getUsernamePasswordLoginFilter() throws Exception {
+    public UsernamePasswordLoginFilter getUsernamePasswordLoginFilter() throws Exception
+    {
         UsernamePasswordLoginFilter usernamePasswordLoginFilter = new UsernamePasswordLoginFilter();
         usernamePasswordLoginFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
         usernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);

@@ -15,6 +15,6 @@ public class Comment extends DomainBase
     @Column(type = "VARCHAR(250)")
     private String content;
 
-    @Column(type = "INT")
-    private Integer state;
+    @Column(type = "INT", defaultValue = "0")
+    private Integer type;
 }
